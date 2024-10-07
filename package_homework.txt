@@ -1,0 +1,113 @@
+package homework;
+
+import java.util.Scanner;
+
+// Student class to store name, surname, and grade
+class Student {
+    String name;
+    String surname;
+    String grade;  // Grade is now a String to allow both letters and numbers
+
+    // Constructor
+    public Student(String name, String surname, String grade) {
+        this.name = name;
+        this.surname = surname;
+        this.grade = grade;
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + surname + " (Grade: " + grade + ")";
+    }
+}
+
+public class StudentManagementSystem {
+    // Array to store student objects
+    static Student[] students = new Student[100];
+    static int studentCount = 0;  // Counter for number of students
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        // Menu loop
+        do {
+            System.out.println("Student Management System");
+            System.out.println("1. Add Student");
+            System.out.println("2. View Students");
+            System.out.println("3. Delete Student");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline character
+
+            switch (choice) {
+                case 1:
+                    addStudent(scanner);
+                    break;
+                case 2:
+                    viewStudents();
+                    break;
+                case 3:
+                    deleteStudent(scanner);
+                    break;
+                case 4:
+                    System.out.println("Exiting system.");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        } while (choice != 4);
+        
+        scanner.close();
+    }
+
+    // Method to add a student
+    public static void addStudent(Scanner scanner) {
+        if (studentCount >= students.length) {
+            System.out.println("Student list is full.");
+            return;
+        }
+        System.out.print("Enter student name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter student surname: ");
+        String surname = scanner.nextLine();
+        System.out.print("Enter student grade (can be a number or letter): ");
+        String grade = scanner.nextLine();  // Grade is now a String to accept letters or numbers
+
+        students[studentCount] = new Student(name, surname, grade);
+        studentCount++;
+        System.out.println("Student added successfully.");
+    }
+
+    // Method to view all students
+    public static void viewStudents() {
+        if (studentCount == 0) {
+            System.out.println("No students found.");
+            return;
+        }
+        System.out.println("Student List:");
+        for (int i = 0; i < studentCount; i++) {
+            System.out.println((i + 1) + ". " + students[i]);
+        }
+    }
+
+    // Method to delete a student
+    public static void deleteStudent(Scanner scanner) {
+        viewStudents(); // Show current students
+        System.out.print("Enter the student number to delete: ");
+        int studentIndex = scanner.nextInt() - 1;
+
+        if (studentIndex >= 0 && studentIndex < studentCount) {
+            // Shift the array to the left to fill the gap
+            for (int i = studentIndex; i < studentCount - 1; i++) {
+                students[i] = students[i + 1];
+            }
+            students[studentCount - 1] = null; // Clear the last element
+            studentCount--;
+            System.out.println("Student deleted successfully.");
+        } else {
+            System.out.println("Invalid student number.");
+        }
+    }
+}
